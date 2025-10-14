@@ -4,7 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Crypto Palette</title>
-<link rel="icon" href="assets/images/favicon.png" />
+
+<!-- ✅ Favicon -->
+<link rel="icon" href="assets/images/favicon.png" type="image/png" />
+
+<!-- ✅ Twitter / Open Graph Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Crypto Palette">
+<meta name="twitter:description" content="Explore beautiful color palettes inspired by real crypto market vibes.">
+<meta name="twitter:image" content="https://adeniniola.github.io/crypto-palette/assets/images/logo.png">
+<meta property="og:title" content="Crypto Palette">
+<meta property="og:description" content="Explore beautiful color palettes inspired by crypto market vibes.">
+<meta property="og:image" content="https://adeniniola.github.io/crypto-palette/assets/images/logo.png">
+
 <style>
 :root {
   --bg1: #0b0320;
@@ -112,8 +124,7 @@ button.primary {
   vertical-align: middle;
 }
 
-
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
   nav {
     flex-wrap: wrap;
     justify-content: center;
@@ -137,9 +148,6 @@ button.primary {
   margin-top: 12px;
   color: var(--muted);
   text-align: center;
-
-
-
 }
 </style>
 </head>
@@ -151,12 +159,10 @@ button.primary {
 </div>
 <div class="container">
   <div class="header">
-    <!-- <div class="brand">Crypto Palette</div> -->
      <div class="brand">
-  <img src="assets/images/logo.png" alt="Crypto Palette Logo" style="height:32px;vertical-align:middle;margin-right:8px;border-radius:6px;">
-  Crypto Palette
-</div>
-
+        <img src="assets/images/logo.png" alt="Crypto Palette Logo" style="height:32px;vertical-align:middle;margin-right:8px;border-radius:6px;">
+        Crypto Palette
+     </div>
     <nav>
       <a href="index.html">Home</a>
       <a href="gallery.html">Gallery</a>
@@ -165,6 +171,7 @@ button.primary {
       <a href="resources.html">Resources</a>
     </nav>
   </div>
+
   <div class="card">
     <div class="controls">
       <input id="searchInput" placeholder="Search coin (name or symbol) — live suggestions"/>
@@ -176,6 +183,7 @@ button.primary {
     <div style="margin-top:12px">
       <button id="saveBtn" style="display:none">Save Palette</button>
       <button id="toMeme" style="display:none">Open Meme</button>
+      <button id="shareBtn" style="display:none">Share to X</button>
     </div>
     <div class="ads-placeholder">Ad placeholder — Google AdSense code goes here.</div>
   </div>
@@ -256,7 +264,6 @@ async function initCoins(){
       });
     });
 
-    // ✅ Fixed timer declaration & input event
     let timer = null;
     $('#searchInput').addEventListener('input', e => {
       const q = e.target.value.trim();
@@ -322,6 +329,7 @@ async function generatePalette(){
   wrap.style.display='flex';
   $('#saveBtn').style.display='inline-block';
   $('#toMeme').style.display='inline-block';
+  $('#shareBtn').style.display='inline-block';
 }
 
 $('#generateBtn').addEventListener('click', generatePalette);
@@ -335,6 +343,20 @@ $('#saveBtn').addEventListener('click', ()=>{
   alert('Saved!');
 });
 $('#toMeme').addEventListener('click', ()=>{ location.href='games.html' });
+
+// ✅ Share to X
+const shareBtn = document.getElementById('shareBtn');
+if (shareBtn) {
+  shareBtn.addEventListener('click', () => {
+    const colors = Array.from(document.querySelectorAll('#palette .color'))
+      .map(d => d.textContent)
+      .join(', ');
+    const tweet = `🎨 My Crypto Palette colors: ${colors}\n#CryptoPalette`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
+    window.open(twitterUrl, '_blank');
+  });
+}
+
 initCoins();
 </script>
 </body>
