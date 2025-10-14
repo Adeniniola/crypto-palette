@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Crypto Palette</title>
+<link rel="icon" href="assets/images/favicon.png" />
+<style>
+:root {
+  --bg1: #0b0320;
+  --bg2: #2b0b3a;
+  --muted: #9aa0a6;
+  --accent: #8a5cff;
+}
+* { box-sizing: border-box }
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, Segoe UI, Roboto, Arial;
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  color: #fff;
+}
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  background: linear-gradient(180deg, #05000a 0%, rgba(43,11,58,0.6) 60%);
+  transition: opacity .45s;
+}
+.splash h1 { font-size: 1.6rem; margin: 0 0 .6rem; letter-spacing: 0.5px }
+.splash p { color: var(--muted); margin: 0 0 10px }
+.container { max-width: 980px; margin: 5rem auto; padding: 1rem }
+.header { display: flex; align-items: center; gap: 1rem }
+.brand { font-weight: 800; font-size: 1.1rem }
+nav { margin-left: auto; display: flex; gap: .6rem }
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: .5rem .7rem;
+  border-radius: 8px;
+}
+.card {
+  background: rgba(255,255,255,0.03);
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+.controls { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap }
+input, select, button {
+  padding: .6rem;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.02);
+  color: #fff;
+}
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: .6rem .9rem;
+  cursor: pointer;
+}
+.topCoins { display: flex; gap: .6rem; margin-top: .8rem; flex-wrap: wrap }
+.coinCard {
+  background: rgba(255,255,255,0.02);
+  padding: .6rem;
+  border-radius: 8px;
+  width: 140px;
+  text-align: center;
+}
+.palette {
+  display: flex;
+  margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.color {
+  flex: 1;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.footer { margin-top: 2rem; color: var(--muted); font-size: 0.9rem; text-align: center }
+.small { color: var(--muted); font-size: 0.9rem }
+#usernameModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,10,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+#usernameModal .box {
+  background: #0b0b0b;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 320px;
+  text-align: center;
+}
+
+.brand img {
+  height: 28px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.ads-placeholder {
+  background: rgba(255,255,255,0.02);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  text-align: center;
+
+
+
+}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <h1>Crypto Palette</h1>
+  <p>Loading live market vibes... 💫</p>
+  <div class="small">Powered by CoinGecko & Tenor • Built for GitHub Pages</div>
+</div>
+<div class="container">
+  <div class="header">
+    <!-- <div class="brand">Crypto Palette</div> -->
+     <div class="brand">
+  <img src="assets/images/logo.png" alt="Crypto Palette Logo" style="height:32px;vertical-align:middle;margin-right:8px;border-radius:6px;">
+  Crypto Palette
+</div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="community.html">Community</a>
+      <a href="games.html">Meme</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+  <div class="card">
+    <div class="controls">
+      <input id="searchInput" placeholder="Search coin (name or symbol) — live suggestions"/>
+      <select id="cryptoSelect"></select>
+      <button id="generateBtn" class="primary">Generate</button>
+    </div>
+    <div class="topCoins" id="topCoins"></div>
+    <div id="palette" class="palette" style="display:none"></div>
+    <div style="margin-top:12px">
+      <button id="saveBtn" style="display:none">Save Palette</button>
+      <button id="toMeme" style="display:none">Open Meme</button>
+    </div>
+    <div class="ads-placeholder">Ad placeholder — Google AdSense code goes here.</div>
+  </div>
+  <div class="footer small">© Crypto Palette — ready for GitHub Pages deployment</div>
+</div>
+
+<div id="usernameModal">
+  <div class="box">
+    <h3>Pick a username</h3>
+    <input id="usernameInput" placeholder="Your public name (no spaces preferred)"/>
+    <div style="margin-top:8px"><button id="saveUsername" class="primary">Save</button></div>
+  </div>
+</div>
+
+<script>
+function $(s){return document.querySelector(s)}
+function show(el){el.style.display='flex'}
+function hide(el){el.style.display='none'}
+
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    document.getElementById('splash').style.opacity='0';
+    setTimeout(()=>document.getElementById('splash').style.display='none',450);
+  },900);
+});
+
+if(!localStorage.getItem('username')){
+  $('#usernameModal').style.display='flex';
+}else{
+  console.log('user:', localStorage.getItem('username'));
+}
+
+$('#saveUsername').addEventListener('click', ()=>{
+  const v = $('#usernameInput').value.trim();
+  if(!v) return alert('Enter username');
+  localStorage.setItem('username', v);
+  $('#usernameModal').style.display='none';
+  location.reload();
+});
+
+async function initCoins(){
+  try {
+    const topRes = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
+    const top = await topRes.json();
+    const quick = ['bitcoin','ethereum','solana','binancecoin'];
+    const topWrap = $('#topCoins');
+    topWrap.innerHTML = '';
+
+    quick.forEach(id=>{
+      const c = top.find(x=>x.id===id);
+      if(c){
+        const el = document.createElement('div');
+        el.className='coinCard';
+        el.innerHTML = `
+          <div style="font-weight:700">${c.symbol.toUpperCase()}</div>
+          <div class="small">${c.name}</div>
+          <div class="small">${c.price_change_percentage_24h===null?'n/a':c.price_change_percentage_24h.toFixed(2)+'%'}</div>
+          <div style="margin-top:6px"><button data-id="${c.id}">Select</button></div>`;
+        topWrap.appendChild(el);
+      }
+    });
+
+    const markets = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false').then(r=>r.json());
+    const sel = $('#cryptoSelect');
+    sel.innerHTML = '';
+    markets.forEach(c=>{
+      const o = document.createElement('option');
+      o.value = c.id;
+      o.textContent = `${c.symbol.toUpperCase()} - ${c.name}`;
+      sel.appendChild(o);
+    });
+
+    document.querySelectorAll('.coinCard button').forEach(b=>{
+      b.addEventListener('click', e=>{
+        const id = e.target.dataset.id;
+        $('#cryptoSelect').value = id;
+        generatePalette();
+      });
+    });
+
+    // ✅ Fixed timer declaration & input event
+    let timer = null;
+    $('#searchInput').addEventListener('input', e => {
+      const q = e.target.value.trim();
+      if (timer) clearTimeout(timer);
+      if (!q) return;
+      timer = setTimeout(async () => {
+        try {
+          const s = await fetch('https://api.coingecko.com/api/v3/search?query=' + encodeURIComponent(q)).then(r => r.json());
+          if (s.coins && s.coins.length) {
+            const p = s.coins[0];
+            if (!Array.from(sel.options).find(o => o.value === p.id)) {
+              sel.prepend(new Option(p.symbol.toUpperCase() + ' - ' + p.name, p.id));
+            }
+            sel.value = p.id;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }, 150);
+    });
+
+  } catch (err) {
+    console.error('initCoins', err);
+  }
+}
+
+async function fetchChange(id){
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/coins/' + encodeURIComponent(id));
+    const d = await r.json();
+    return d.market_data && d.market_data.price_change_percentage_24h;
+  } catch(e){
+    console.error(e);
+    return null;
+  }
+}
+
+function paletteFromChange(change){
+  if(change===null||change===undefined||isNaN(change)) return ['#777','#999','#bbb','#ddd','#eee'];
+  if(change>10) return ['#00ff66','#00cc66','#66ff99','#ccffdd','#f0fff4'];
+  if(change>3) return ['#00ff00','#1ec94a','#57ff8c','#9ffdba','#eaffef'];
+  if(change>0) return ['#33cc33','#66ff99','#99ffcc','#ccffee','#eafff0'];
+  if(change<-10) return ['#ff3b3b','#ff6666','#ff8f8f','#ffcfcf','#ffecec'];
+  if(change<-3) return ['#ff3333','#ff6666','#ff9999','#ffd6d6','#ffeeee'];
+  if(change<0) return ['#cc3333','#ff6666','#ff9999','#ffdede','#ffeeef'];
+  return ['#cccccc','#dddddd','#eeeeee','#f4f4f4','#fafafa'];
+}
+
+async function generatePalette(){
+  const id = $('#cryptoSelect').value || 'bitcoin';
+  localStorage.setItem('selectedCoin', id);
+  const change = await fetchChange(id);
+  const pal = paletteFromChange(change);
+  const wrap = $('#palette');
+  wrap.innerHTML='';
+  pal.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='color';
+    d.style.background=c;
+    d.textContent=c;
+    wrap.appendChild(d);
+  });
+  wrap.style.display='flex';
+  $('#saveBtn').style.display='inline-block';
+  $('#toMeme').style.display='inline-block';
+}
+
+$('#generateBtn').addEventListener('click', generatePalette);
+$('#saveBtn').addEventListener('click', ()=>{
+  const id = localStorage.getItem('selectedCoin')||'bitcoin';
+  const colors = Array.from(document.querySelectorAll('#palette .color')).map(d=>d.textContent);
+  const list = JSON.parse(localStorage.getItem('palettes')||'[]');
+  const obj = { id:'p'+Date.now().toString(36), user: localStorage.getItem('username')||'guest', coin:id, colors, votes:0, ts:Date.now() };
+  list.unshift(obj);
+  localStorage.setItem('palettes', JSON.stringify(list));
+  alert('Saved!');
+});
+$('#toMeme').addEventListener('click', ()=>{ location.href='games.html' });
+initCoins();
+</script>
+</body>
+</html>

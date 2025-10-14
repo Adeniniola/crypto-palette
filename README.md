@@ -1,0 +1,1 @@
+# Crypto Palette (GitHub Pages Ready)\n\nThis repo contains a static website (HTML/CSS/JS) that generates mood palettes for cryptocurrencies and shows reaction GIFs based on 24h price changes.
