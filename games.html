@@ -1,8 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Crypto Palette — Meme</title>
+<link rel="icon" href="assets/images/favicon.png" />
 <style>
 :root{--bg:#0b0320;--muted:#9aa0a6;--accent:#8a5cff}
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#2b0b3a);color:#fff;min-height:100vh;display:flex;flex-direction:column}
@@ -11,12 +13,15 @@ header{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;
 .container{max-width:980px;margin:2rem auto;padding:1rem}
 .card{background:rgba(255,255,255,0.03);padding:1rem;border-radius:12px}
 .meme{display:flex;flex-direction:column;gap:12px;align-items:center}
-.meme img{max-width:720px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-.palettePreview{display:flex;width:420px;height:80px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
-.palettePreview div{flex:1}
-.controls{display:flex;gap:8px;align-items:center}
+.meme img{max-width:720px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:block}
+.palettePreview{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:420px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);padding:10px;background:rgba(0,0,0,0.12)}
+.paletteRow{display:flex;width:100%;gap:6px}
+.colorBox{flex:1;height:36px;border-radius:4px}
+.info{color:var(--muted)}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .small{color:var(--muted)}
 .ads-placeholder{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);text-align:center}
+.notice{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);text-align:center;width:100%}
 </style>
 </head>
 <body>
@@ -24,21 +29,183 @@ header{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;
 <div class="container">
   <div class="card">
     <div class="meme" id="memeArea">
-      <div class="small">This shows a reaction GIF for the coin you selected on Home.</div>
+      <div id="status" class="notice">Loading meme tools...</div>
       <div id="gifWrap"></div>
-      <div id="info" class="small"></div>
-      <div class="palettePreview" id="preview"></div>
-      <div class="controls"><button id="regen">Generate Meme GIF</button><button id="share">Share to X (Twitter)</button></div>
+      <div id="info" class="info"></div>
+
+      <div class="palettePreview" id="preview" style="display:none">
+        <div id="coinHeader" class="small"></div>
+        <div id="paletteBoxes" class="paletteRow"></div>
+        <div id="paletteHexes" style="font-family:monospace;margin-top:6px;"></div>
+      </div>
+
+      <div class="controls">
+        <button id="regen" class="primary">Generate Meme GIF</button>
+        <button id="share" class="primary">Share to X (Twitter)</button>
+      </div>
+
       <div class="ads-placeholder">Ad placeholder — add AdSense code here.</div>
     </div>
   </div>
 </div>
+
 <script>
-async function fetchChange(id){ try{ const r=await fetch('https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(id)); const d=await r.json(); return d.market_data && d.market_data.price_change_percentage_24h }catch(e){console.error(e);return null} }
-function paletteFromChange(change){ if(change===null||isNaN(change)) return ['#777','#999','#bbb','#ddd','#eee']; if(change>10) return ['#00ff66','#00cc66','#66ff99','#ccffdd','#f0fff4']; if(change>3) return ['#00ff00','#1ec94a','#57ff8c','#9ffdba','#eaffef']; if(change>0) return ['#33cc33','#66ff99','#99ffcc','#ccffee','#eafff0']; if(change<-10) return ['#ff3b3b','#ff6666','#ff8f8f','#ffcfcf','#ffecec']; if(change<-3) return ['#ff3333','#ff6666','#ff9999','#ffd6d6','#ffeeee']; if(change<0) return ['#cc3333','#ff6666','#ff9999','#ffdede','#ffeeef']; return ['#cccccc','#dddddd','#eeeeee','#f4f4f4','#fafafa'] }
-async function getGifForChange(change){ let cat='neutral'; if(change>15) cat='celebrate'; else if(change>5) cat='happy'; else if(change>0) cat='yay'; else if(change<-10) cat='cry'; else if(change<-5) cat='sad'; else if(change<0) cat='shock'; try{ const r = await fetch('https://g.tenor.com/v1/search?q='+encodeURIComponent(cat+' crypto')+'&key=LIVDSRZULELA&limit=20'); const js = await r.json(); const arr = js.results || []; if(!arr.length) return ''; return arr[Math.floor(Math.random()*arr.length)].media[0].gif.url }catch(e){console.error(e);return ''} }
-async function renderMeme(){ const coin = localStorage.getItem('selectedCoin')||'bitcoin'; const change = await fetchChange(coin); const pal = paletteFromChange(change); const gif = await getGifForChange(change); const gifWrap = document.getElementById('gifWrap'); gifWrap.innerHTML = gif ? '<img src="'+gif+'" alt="gif"/>' : '<div class="small">No GIF available</div>'; document.getElementById('info').textContent = coin.toUpperCase() + ' — 24h: ' + (change===null? 'n/a' : change.toFixed(2)+'%'); const prev = document.getElementById('preview'); prev.innerHTML=''; pal.forEach(c=>{ const d=document.createElement('div'); d.style.background=c; prev.appendChild(d) }) }
-document.getElementById('regen').addEventListener('click', renderMeme); document.getElementById('share').addEventListener('click', ()=>{ const coin = localStorage.getItem('selectedCoin')||'bitcoin'; const info = document.getElementById('info').innerText; const colors = Array.from(document.querySelectorAll('#preview div')).map(d=>d.style.background).join(', '); const img = document.querySelector('#gifWrap img'); const imgUrl = img ? img.src : ''; const text = encodeURIComponent(info + ' — Palette: ' + colors); window.open('https://twitter.com/intent/tweet?text='+text+'&url='+encodeURIComponent(imgUrl),'_blank') }); renderMeme();
+/*
+  Robust games.html script
+  - Loads selectedCoin from localStorage (set by index.html)
+  - Fetches coin 24h change via CoinGecko
+  - Fetches a Tenor GIF (cryptomeme query) and shows it
+  - Builds a palette preview (colors + hexes)
+  - Share opens Twitter intent with the Tenor GIF URL (so GIF appears as media preview)
+*/
+
+// Helpers
+const $ = (s) => document.querySelector(s);
+const TENOR_KEY = 'LIVDSRZULELA'; // demo key - fine for prototype
+
+function setStatus(text, isError=false){
+  const s = $('#status');
+  s.textContent = text;
+  s.style.color = isError ? '#ffb4b4' : '';
+}
+
+// get selected coin id from localStorage
+const selectedCoin = localStorage.getItem('selectedCoin');
+
+async function getCoinData(id){
+  if(!id) return null;
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(id));
+    if(!res.ok) throw new Error('CoinGecko API error: '+res.status);
+    const data = await res.json();
+    return data;
+  } catch(err) {
+    console.error('getCoinData', err);
+    return null;
+  }
+}
+
+function paletteFromChange(change){
+  if(change===null||isNaN(change)) return ['#777','#999','#bbb','#ddd','#eee'];
+  if(change>10) return ['#00ff66','#00cc66','#66ff99','#ccffdd','#f0fff4'];
+  if(change>3) return ['#00ff00','#1ec94a','#57ff8c','#9ffdba','#eaffef'];
+  if(change>0) return ['#33cc33','#66ff99','#99ffcc','#ccffee','#eafff0'];
+  if(change<-10) return ['#ff3b3b','#ff6666','#ff8f8f','#ffcfcf','#ffecec'];
+  if(change<-3) return ['#ff3333','#ff6666','#ff9999','#ffd6d6','#ffeeee'];
+  if(change<0) return ['#cc3333','#ff6666','#ff9999','#ffdede','#ffeeef'];
+  return ['#cccccc','#dddddd','#eeeeee','#f4f4f4','#fafafa'];
+}
+
+async function fetchTenorGif(query='crypto meme'){
+  try {
+    // Tenor v1 endpoint (CORS friendly)
+    const url = `https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${TENOR_KEY}&limit=25`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Tenor error: ' + res.status);
+    const js = await res.json();
+    if(!js.results || !js.results.length) return null;
+    // prefer media[0].gif.url or fallback
+    const pick = js.results[Math.floor(Math.random()*js.results.length)];
+    // resilience for different Tenor payloads:
+    const media = pick.media && pick.media[0];
+    const gif = media && (media.gif && media.gif.url) || pick.media && pick.media[0] && pick.media[0].mediumgif && pick.media[0].mediumgif.url || pick.url;
+    return gif || null;
+  } catch(err){
+    console.error('fetchTenorGif',err);
+    return null;
+  }
+}
+
+async function renderMeme(){
+  const gifWrap = $('#gifWrap');
+  const info = $('#info');
+  const preview = $('#preview');
+  const boxes = $('#paletteBoxes');
+  const hexes = $('#paletteHexes');
+  gifWrap.innerHTML = '';
+  boxes.innerHTML = '';
+  hexes.textContent = '';
+  preview.style.display = 'none';
+  info.textContent = '';
+
+  if(!selectedCoin){
+    setStatus('No coin selected. Go to Home and pick a coin first.', true);
+    return;
+  }
+  setStatus('Fetching coin data…');
+
+  const coin = await getCoinData(selectedCoin);
+  if(!coin){
+    setStatus('Failed to load coin data. Try again later.', true);
+    return;
+  }
+
+  const change = coin.market_data && coin.market_data.price_change_percentage_24h;
+  const price = coin.market_data && coin.market_data.current_price && coin.market_data.current_price.usd;
+  const prettyPrice = price ? '$' + Number(price).toLocaleString() : 'n/a';
+
+  const pal = paletteFromChange(change);
+  // build preview
+  $('#coinHeader').textContent = `${coin.name} — ${coin.symbol.toUpperCase()} — 24h: ${change===null? 'n/a' : change.toFixed(2)+'%'} — Price: ${prettyPrice}`;
+  pal.forEach(c=>{
+    const b = document.createElement('div');
+    b.className='colorBox';
+    b.style.background = c;
+    boxes.appendChild(b);
+  });
+  hexes.textContent = pal.join('  ');
+  preview.style.display = 'block';
+
+  setStatus('Fetching a meme GIF…');
+  // choose a query based on change
+  let q = 'crypto meme';
+  if(change!==null && !isNaN(change)){
+    if(change>10) q = 'celebrate crypto';
+    else if(change>3) q = 'happy crypto';
+    else if(change>0) q = 'yay crypto';
+    else if(change<-10) q = 'cry crypto';
+    else if(change<-3) q = 'sad crypto';
+    else if(change<0) q = 'shocked crypto';
+  }
+
+  const gifUrl = await fetchTenorGif(q);
+  if(!gifUrl){
+    setStatus('No GIF found — try "Generate" again or change coin.', true);
+    gifWrap.innerHTML = '<div class="small">No GIF available</div>';
+    return;
+  }
+
+  // show gif
+  const img = document.createElement('img');
+  img.src = gifUrl;
+  img.alt = 'meme gif';
+  img.onload = () => setStatus('GIF loaded — ready to share!');
+  img.onerror = () => { setStatus('Failed to load GIF preview', true); console.error('img load error'); };
+  gifWrap.appendChild(img);
+
+  // store for share
+  gifWrap.dataset.gif = gifUrl;
+}
+
+// Share: open Twitter intent with gif url so Twitter shows the GIF preview
+$('#share').addEventListener('click', ()=>{
+  const gif = $('#gifWrap img') && $('#gifWrap img').src;
+  const coinText = $('#coinHeader').textContent || selectedCoin;
+  const paletteText = $('#paletteHexes').textContent || '';
+  const caption = `My new Crypto Palette — ${coinText}\n${paletteText}\n#CryptoPalette @Crypto__Palette`;
+  // Twitter intent: text + url (include gif url so X attempts to render it as media)
+  const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(caption)}&url=${encodeURIComponent(gif || '')}`;
+  window.open(intent,'_blank');
+});
+
+// regen button
+$('#regen').addEventListener('click', renderMeme);
+
+// auto-render on load
+setTimeout(()=>{ // small delay to allow page nav storage etc.
+  renderMeme();
+},150);
+
 </script>
 </body>
 </html>
