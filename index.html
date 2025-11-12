@@ -4,25 +4,13 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Crypto Palette</title>
-
-<!-- ✅ Favicon -->
-<link rel="icon" href="assets/images/favicon.png" type="image/png" />
-
-<!-- ✅ Twitter / Open Graph Meta Tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Crypto Palette">
-<meta name="twitter:description" content="Explore beautiful color palettes inspired by real crypto market vibes.">
-<meta name="twitter:image" content="https://adeniniola.github.io/crypto-palette/assets/images/logo.png">
-<meta property="og:title" content="Crypto Palette">
-<meta property="og:description" content="Explore beautiful color palettes inspired by crypto market vibes.">
-<meta property="og:image" content="https://adeniniola.github.io/crypto-palette/assets/images/logo.png">
-
+<link rel="icon" href="assets/images/favicon.png" />
 <style>
 :root {
   --bg1: #0b0320;
   --bg2: #2b0b3a;
   --muted: #9aa0a6;
-  --accent: #a573ff; /* ✅ Soft Purple */
+  --accent: #8a5cff;
 }
 * { box-sizing: border-box }
 html, body {
@@ -32,7 +20,6 @@ html, body {
   background: linear-gradient(180deg, var(--bg1), var(--bg2));
   color: #fff;
 }
-
 .splash {
   position: fixed;
   inset: 0;
@@ -46,13 +33,9 @@ html, body {
 }
 .splash h1 { font-size: 1.6rem; margin: 0 0 .6rem; letter-spacing: 0.5px }
 .splash p { color: var(--muted); margin: 0 0 10px }
-
 .container { max-width: 980px; margin: 5rem auto; padding: 1rem }
-
 .header { display: flex; align-items: center; gap: 1rem }
 .brand { font-weight: 800; font-size: 1.1rem }
-.brand img { height: 32px; vertical-align: middle; margin-right: 6px; }
-
 nav { margin-left: auto; display: flex; gap: .6rem }
 nav a {
   color: var(--muted);
@@ -60,78 +43,67 @@ nav a {
   padding: .5rem .7rem;
   border-radius: 8px;
 }
-
 .card {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
   padding: 1rem;
-  border-radius: 14px;
+  border-radius: 12px;
   margin-top: 1rem;
 }
-
 .controls { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap }
 input, select, button {
   padding: .6rem;
   border-radius: 8px;
   border: none;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
   color: #fff;
 }
-
 button.primary {
   background: var(--accent);
   color: #fff;
   border: none;
   padding: .6rem .9rem;
   cursor: pointer;
-  font-weight: 600;
-  border-radius: 10px;
 }
-
 .topCoins { display: flex; gap: .6rem; margin-top: .8rem; flex-wrap: wrap }
 .coinCard {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.02);
   padding: .6rem;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 140px;
   text-align: center;
 }
-
 .palette {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.03);
 }
-
 .color {
-  width: 100%;
-  height: 55px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: .9rem;
+  flex: 1;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  animation: fadeIn 0.6s ease forwards;
   opacity: 0;
-  transform: translateX(-10px);
-  animation: reveal .6s ease forwards;
-  border: 1px solid rgba(255,255,255,0.05);
 }
+.color:nth-child(1){animation-delay:0.1s}
+.color:nth-child(2){animation-delay:0.2s}
+.color:nth-child(3){animation-delay:0.3s}
+.color:nth-child(4){animation-delay:0.4s}
+.color:nth-child(5){animation-delay:0.5s}
 
-.color:hover {
-  box-shadow: 0 0 10px var(--accent);
-  transform: scale(1.02) translateX(0);
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: translateX(0); }
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(8px);}
+  to {opacity: 1; transform: translateY(0);}
 }
 
 .footer { margin-top: 2rem; color: var(--muted); font-size: 0.9rem; text-align: center }
-
 .small { color: var(--muted); font-size: 0.9rem }
-
 #usernameModal {
   position: fixed;
   inset: 0;
@@ -148,45 +120,57 @@ button.primary {
   width: 320px;
   text-align: center;
 }
-
-@media (max-width: 600px) {
-  nav { flex-wrap: wrap; justify-content: center; }
-  .controls { flex-direction: column; align-items: stretch; }
-  input, select, button { width: 100%; }
-  .coinCard { width: 100%; }
+.brand img {
+  height: 28px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
-
+@media (max-width: 600px) {
+  nav {flex-wrap: wrap; justify-content: center;}
+  .controls {flex-direction: column; align-items: stretch;}
+  input, select, button {width: 100%;}
+  .coinCard {width: 100%;}
+}
 .ads-placeholder {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.02);
   padding: 12px;
   border-radius: 8px;
   margin-top: 12px;
   color: var(--muted);
   text-align: center;
 }
+.watermark {
+  font-size: 0.8rem;
+  color: rgba(138, 92, 255, 0.6);
+  text-align: right;
+  margin-top: 6px;
+  animation: fadeInSoft 0.6s ease-in-out infinite alternate;
+}
+@keyframes fadeInSoft {
+  from {opacity: 0.6;}
+  to {opacity: 1;}
+}
 </style>
 </head>
-
 <body>
 <div class="splash" id="splash">
   <h1>Crypto Palette</h1>
   <p>Loading live market vibes... 💫</p>
   <div class="small">Powered by CoinGecko & Tenor • Built for GitHub Pages</div>
 </div>
-
 <div class="container">
   <div class="header">
-     <div class="brand">
-        <img src="assets/images/logo.png" alt="Crypto Palette Logo">
-        Crypto Palette
-     </div>
-     <nav>
+    <div class="brand">
+      <img src="assets/images/logo.png" alt="Crypto Palette Logo" style="height:32px;vertical-align:middle;margin-right:8px;border-radius:6px;">
+      Crypto Palette
+    </div>
+    <nav>
       <a href="index.html">Home</a>
       <a href="gallery.html">Gallery</a>
       <a href="community.html">Community</a>
       <a href="games.html">Meme</a>
       <a href="resources.html">Resources</a>
-     </nav>
+    </nav>
   </div>
 
   <div class="card">
@@ -198,16 +182,15 @@ button.primary {
 
     <div class="topCoins" id="topCoins"></div>
     <div id="palette" class="palette" style="display:none"></div>
+    <div class="watermark">@Crypto__Palette</div>
 
     <div style="margin-top:12px">
       <button id="saveBtn" style="display:none">Save Palette</button>
-      <button id="toMeme" style="display:none">Open Meme</button>
-      <button id="shareBtn" style="display:none">Share to X</button>
+      <button id="toMeme" style="display:none">Share on X</button>
     </div>
 
     <div class="ads-placeholder">Ad placeholder — Google AdSense code goes here.</div>
   </div>
-
   <div class="footer small">© Crypto Palette — ready for GitHub Pages deployment</div>
 </div>
 
@@ -221,6 +204,8 @@ button.primary {
 
 <script>
 function $(s){return document.querySelector(s)}
+function show(el){el.style.display='flex'}
+function hide(el){el.style.display='none'}
 
 window.addEventListener('load', ()=>{
   setTimeout(()=>{
@@ -230,14 +215,16 @@ window.addEventListener('load', ()=>{
 });
 
 if(!localStorage.getItem('username')){
-  document.getElementById('usernameModal').style.display='flex';
+  $('#usernameModal').style.display='flex';
+}else{
+  console.log('user:', localStorage.getItem('username'));
 }
 
-document.getElementById('saveUsername').addEventListener('click', ()=>{
-  const v = document.getElementById('usernameInput').value.trim();
+$('#saveUsername').addEventListener('click', ()=>{
+  const v = $('#usernameInput').value.trim();
   if(!v) return alert('Enter username');
   localStorage.setItem('username', v);
-  document.getElementById('usernameModal').style.display='none';
+  $('#usernameModal').style.display='none';
   location.reload();
 });
 
@@ -245,9 +232,8 @@ async function initCoins(){
   try {
     const topRes = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
     const top = await topRes.json();
-
     const quick = ['bitcoin','ethereum','solana','binancecoin'];
-    const topWrap = document.getElementById('topCoins');
+    const topWrap = $('#topCoins');
     topWrap.innerHTML = '';
 
     quick.forEach(id=>{
@@ -264,9 +250,8 @@ async function initCoins(){
       }
     });
 
-    const markets = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
-      .then(r=>r.json());
-    const sel = document.getElementById('cryptoSelect');
+    const markets = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false').then(r=>r.json());
+    const sel = $('#cryptoSelect');
     sel.innerHTML = '';
     markets.forEach(c=>{
       const o = document.createElement('option');
@@ -278,9 +263,30 @@ async function initCoins(){
     document.querySelectorAll('.coinCard button').forEach(b=>{
       b.addEventListener('click', e=>{
         const id = e.target.dataset.id;
-        sel.value = id;
+        $('#cryptoSelect').value = id;
         generatePalette();
       });
+    });
+
+    let timer = null;
+    $('#searchInput').addEventListener('input', e => {
+      const q = e.target.value.trim();
+      if (timer) clearTimeout(timer);
+      if (!q) return;
+      timer = setTimeout(async () => {
+        try {
+          const s = await fetch('https://api.coingecko.com/api/v3/search?query=' + encodeURIComponent(q)).then(r => r.json());
+          if (s.coins && s.coins.length) {
+            const p = s.coins[0];
+            if (!Array.from(sel.options).find(o => o.value === p.id)) {
+              sel.prepend(new Option(p.symbol.toUpperCase() + ' - ' + p.name, p.id));
+            }
+            sel.value = p.id;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }, 150);
     });
 
   } catch (err) {
@@ -300,7 +306,7 @@ async function fetchChange(id){
 }
 
 function paletteFromChange(change){
-  if(change===null || isNaN(change)) return ['#777','#999','#bbb','#ddd','#eee'];
+  if(change===null||change===undefined||isNaN(change)) return ['#777','#999','#bbb','#ddd','#eee'];
   if(change>10) return ['#00ff66','#00cc66','#66ff99','#ccffdd','#f0fff4'];
   if(change>3) return ['#00ff00','#1ec94a','#57ff8c','#9ffdba','#eaffef'];
   if(change>0) return ['#33cc33','#66ff99','#99ffcc','#ccffee','#eafff0'];
@@ -311,41 +317,36 @@ function paletteFromChange(change){
 }
 
 async function generatePalette(){
-  const id = document.getElementById('cryptoSelect').value || 'bitcoin';
+  const id = $('#cryptoSelect').value || 'bitcoin';
   localStorage.setItem('selectedCoin', id);
   const change = await fetchChange(id);
   const pal = paletteFromChange(change);
-
-  const wrap = document.getElementById('palette');
+  const wrap = $('#palette');
   wrap.innerHTML='';
-  pal.forEach((c,i)=>{
+  pal.forEach(c=>{
     const d=document.createElement('div');
     d.className='color';
     d.style.background=c;
     d.textContent=c;
-    d.style.animationDelay = (i * 0.15) + "s"; /* ✅ stagger */
     wrap.appendChild(d);
   });
   wrap.style.display='flex';
-
-  document.getElementById('saveBtn').style.display='inline-block';
-  document.getElementById('toMeme').style.display='inline-block';
-  document.getElementById('shareBtn').style.display='inline-block';
+  $('#saveBtn').style.display='inline-block';
+  $('#toMeme').style.display='inline-block';
 }
 
-document.getElementById('generateBtn').addEventListener('click', generatePalette);
-
-document.getElementById('shareBtn').addEventListener('click', () => {
-  const colors = Array.from(document.querySelectorAll('#palette .color'))
-    .map(d => d.textContent)
-    .join(', ');
-  const tweet = `🎨 My Crypto Palette colors: ${colors}\n#CryptoPalette`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-  window.open(twitterUrl, '_blank');
+$('#generateBtn').addEventListener('click', generatePalette);
+$('#saveBtn').addEventListener('click', ()=>{
+  const id = localStorage.getItem('selectedCoin')||'bitcoin';
+  const colors = Array.from(document.querySelectorAll('#palette .color')).map(d=>d.textContent);
+  const list = JSON.parse(localStorage.getItem('palettes')||'[]');
+  const obj = { id:'p'+Date.now().toString(36), user: localStorage.getItem('username')||'guest', coin:id, colors, votes:0, ts:Date.now() };
+  list.unshift(obj);
+  localStorage.setItem('palettes', JSON.stringify(list));
+  alert('Saved!');
 });
-
+$('#toMeme').addEventListener('click', ()=>{ location.href='games.html' });
 initCoins();
 </script>
-
 </body>
 </html>
