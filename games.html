@@ -1,188 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto Palette - Meme Section</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Palette | Games</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <meta name="description" content="Generate creative color palettes and GIFs, and share your favorite combinations on X." />
   <style>
     body {
-      background-color: #0d0d0d;
+      background-color: #0b0b0b;
       color: #fff;
-      font-family: "Poppins", sans-serif;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
       margin: 0;
       padding: 0;
-      text-align: center;
     }
 
     header {
-      padding: 20px;
-      font-size: 1.8em;
-      font-weight: bold;
-      color: #a46cff;
-      animation: fadeIn 1s ease-in;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      position: fixed;
+      top: 0;
+      background: rgba(20, 20, 20, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 10;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    header a {
+      color: #b98aff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1em;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    input, button {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      font-size: 1em;
-    }
-
-    input {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    button {
-      background: #a46cff;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #c299ff;
+    main {
+      margin-top: 100px;
+      text-align: center;
     }
 
     .palette {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
       margin-top: 20px;
+      align-items: center;
     }
 
     .color-box {
-      width: 60px;
-      height: 60px;
-      margin: 5px;
+      width: 180px;
+      height: 50px;
       border-radius: 10px;
-      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #000;
+      transition: transform 0.3s ease;
     }
 
     .color-box:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
 
-    .meme-container {
-      margin-top: 20px;
-      animation: fadeIn 1.2s ease;
+    .gif-box {
+      margin-top: 25px;
     }
 
-    .meme-container img {
-      max-width: 100%;
-      border-radius: 10px;
+    .gif-box img {
+      width: 240px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(185, 138, 255, 0.3);
+    }
+
+    .share-btn {
+      margin-top: 25px;
+      background-color: #b98aff;
+      color: #fff;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .share-btn:hover {
+      background-color: #8e63e0;
     }
 
     .watermark {
-      color: #a46cff;
-      font-size: 0.9em;
-      margin-top: 10px;
-      opacity: 0.6;
-      animation: fadeIn 1.5s ease;
+      position: fixed;
+      bottom: 15px;
+      right: 20px;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: rgba(185, 138, 255, 0.5);
+      animation: pulse 0.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <header>Meme Palette 🎨</header>
-  <div class="container">
-    <input id="searchInput" placeholder="Search a coin e.g. Bitcoin" />
-    <select id="coinSelect"></select>
-    <button id="generateBtn">Generate Meme Palette</button>
+
+  <header>
+    <a href="index.html">← Back to Home</a>
+    <h2>Crypto Palette</h2>
+  </header>
+
+  <main>
+    <h1>🎨 Your Color Palette + GIF</h1>
 
     <div class="palette" id="palette"></div>
-    <div class="meme-container" id="memeContainer"></div>
+    <div class="gif-box" id="gifBox"></div>
 
-    <button id="shareBtn" style="display:none;">Share on X</button>
-    <div class="watermark">@Crypto__Palette</div>
-  </div>
+    <button class="share-btn" id="shareBtn">Share on X</button>
+  </main>
+
+  <div class="watermark">Crypto__Palette</div>
 
   <script>
-    const paletteEl = document.getElementById('palette');
-    const memeEl = document.getElementById('memeContainer');
-    const shareBtn = document.getElementById('shareBtn');
-    const sel = document.getElementById('coinSelect');
-    const clientId = '546c25e4e0f3b88'; // Imgur client ID
+    // Example generated colors
+    const colors = ['#FF4757', '#FFA502', '#2ED573', '#1E90FF', '#B98AFF'];
+    const paletteContainer = document.getElementById('palette');
 
-    // Fetch coins list
-    async function initCoins() {
-      const res = await fetch('https://api.coingecko.com/api/v3/coins/list');
-      const data = await res.json();
-      data.slice(0, 100).forEach(coin => {
-        sel.add(new Option(coin.name, coin.id));
-      });
-    }
-
-    initCoins();
-
-    // Search suggestion
-    let timer = null;
-    document.getElementById('searchInput').addEventListener('input', e => {
-      const q = e.target.value.trim();
-      if (timer) clearTimeout(timer);
-      if (!q) return;
-
-      timer = setTimeout(async () => {
-        try {
-          const s = await fetch(
-            'https://api.coingecko.com/api/v3/search?query=' + encodeURIComponent(q)
-          ).then(r => r.json());
-          if (s.coins && s.coins.length) {
-            const p = s.coins[0];
-            if (!Array.from(sel.options).find(o => o.value === p.id)) {
-              sel.prepend(new Option(p.symbol.toUpperCase() + ' - ' + p.name, p.id));
-            }
-            sel.value = p.id;
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      }, 150);
+    colors.forEach(color => {
+      const div = document.createElement('div');
+      div.classList.add('color-box');
+      div.style.backgroundColor = color;
+      div.textContent = color;
+      paletteContainer.appendChild(div);
     });
 
-    // Generate Meme Palette
-    document.getElementById('generateBtn').addEventListener('click', async () => {
-      const coinId = sel.value;
-      if (!coinId) return alert('Please select a coin!');
+    // Example GIF from Tenor (you can replace the URL dynamically later)
+    const gifBox = document.getElementById('gifBox');
+    const gif = document.createElement('img');
+    gif.src = 'https://media.tenor.com/zCwGkZbFhYIAAAAM/color-palette.gif';
+    gif.alt = 'Palette GIF';
+    gifBox.appendChild(gif);
 
-      const colors = Array.from({ length: 4 }, () =>
-        '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
-      );
-
-      paletteEl.innerHTML = '';
-      colors.forEach(c => {
-        const box = document.createElement('div');
-        box.className = 'color-box';
-        box.style.background = c;
-        box.title = c;
-        paletteEl.appendChild(box);
-      });
-
-      // Fetch random meme GIF from Tenor
-      const memeRes = await fetch(`https://tenor.googleapis.com/v2/search?q=${coinId}&key=AIzaSyDnbLxq-UxWUGmAzPT1sGDAx_LbIxeYvI0&limit=1`);
-      const memeData = await memeRes.json();
-      const memeUrl = memeData.results[0]?.media_formats?.gif?.url || '';
-
-      memeEl.innerHTML = `<img src="${memeUrl}" alt="Meme">`;
-
-      shareBtn.style.display = 'block';
-      shareBtn.onclick = () => {
-        const text = `🎨 Coin: ${coinId}\nPalette: ${colors.join(', ')}\n#CryptoPalette`;
-        const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(memeUrl)}`;
-        window.open(shareUrl, '_blank');
-      };
+    // Share on X
+    const shareBtn = document.getElementById('shareBtn');
+    shareBtn.addEventListener('click', () => {
+      const text = encodeURIComponent("🎨 Check out my palette + GIF from #Crypto__Palette!");
+      const url = encodeURIComponent("https://adeniniola.github.io/crypto-palette/");
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
     });
   </script>
 </body>
