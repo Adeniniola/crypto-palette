@@ -1,162 +1,188 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Palette | Games</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <meta name="description" content="Generate creative color palettes and GIFs, and share your favorite combinations on X." />
-  <style>
-    body {
-      background-color: #0b0b0b;
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-      position: fixed;
-      top: 0;
-      background: rgba(20, 20, 20, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 10;
-    }
-
-    header a {
-      color: #b98aff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1em;
-    }
-
-    main {
-      margin-top: 100px;
-      text-align: center;
-    }
-
-    .palette {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
-      align-items: center;
-    }
-
-    .color-box {
-      width: 180px;
-      height: 50px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px #000;
-      transition: transform 0.3s ease;
-    }
-
-    .color-box:hover {
-      transform: scale(1.05);
-    }
-
-    .gif-box {
-      margin-top: 25px;
-    }
-
-    .gif-box img {
-      width: 240px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(185, 138, 255, 0.3);
-    }
-
-    .share-btn {
-      margin-top: 25px;
-      background-color: #b98aff;
-      color: #fff;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 1em;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .share-btn:hover {
-      background-color: #8e63e0;
-    }
-
-    .watermark {
-      position: fixed;
-      bottom: 15px;
-      right: 20px;
-      font-size: 1.2em;
-      font-weight: 700;
-      color: rgba(185, 138, 255, 0.5);
-      animation: pulse 0.6s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { opacity: 0.5; }
-      to { opacity: 1; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crypto Palette — Meme Preview</title>
+<link rel="icon" href="assets/images/favicon.png" type="image/png"/>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Crypto__Palette">
+<meta property="og:site_name" content="Crypto Palette">
+<style>
+:root{--bg1:#0b0320;--bg2:#2b0b3a;--muted:#9aa0a6;--accent:#8a5cff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#fff;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(0,0,0,0.25);backdrop-filter:blur(6px)}
+.header a{color:var(--accent);text-decoration:none;font-weight:700}
+.container{max-width:980px;margin:3rem auto;padding:1rem;text-align:center}
+.previewCard{background:rgba(255,255,255,0.03);padding:16px;border-radius:12px}
+.memeRow{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.gifBox img{max-width:420px;border-radius:10px;box-shadow:0 0 18px rgba(138,92,255,0.2)}
+.paletteStrip{display:flex;flex-direction:column;align-items:center;gap:8px}
+.paletteHorizontal{display:flex;gap:8px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);padding:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+.colorBlock{width:80px;height:60px;display:flex;align-items:center;justify-content:center;font-weight:700;border-radius:6px}
+.hexLabel{font-family:monospace;margin-top:8px;color:var(--muted)}
+.shareBtn{margin-top:14px;background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700}
+.footer{margin-top:20px;color:var(--muted)}
+.watermark{position:fixed;bottom:12px;right:14px;color:var(--accent);opacity:.75;font-weight:700;text-shadow:0 0 6px rgba(138,92,255,0.25)}
+@media(max-width:780px){.gifBox img{max-width:320px}.colorBlock{width:56px;height:48px}}
+</style>
 </head>
 <body>
+  <div class="header">
+    <a href="index.html">← Home</a>
+    <div style="font-weight:800">Crypto Palette — Meme Preview</div>
+    <div></div>
+  </div>
 
-  <header>
-    <a href="index.html">← Back to Home</a>
-    <h2>Crypto Palette</h2>
-  </header>
+  <div class="container">
+    <div class="previewCard">
+      <h2>Your Palette + GIF</h2>
+      <div id="status" style="color:var(--muted);margin-bottom:8px">Loading…</div>
+      <div class="memeRow">
+        <div class="gifBox" id="gifBox"><p style="color:var(--muted)">GIF preview</p></div>
+        <div>
+          <div class="paletteStrip">
+            <div class="paletteHorizontal" id="paletteHorizontal"></div>
+            <div id="paletteHexes" class="hexLabel"></div>
+          </div>
+        </div>
+      </div>
 
-  <main>
-    <h1>🎨 Your Color Palette + GIF</h1>
+      <button class="shareBtn" id="shareNow">Share on X</button>
+    </div>
+    <div class="footer">© Crypto Palette</div>
+  </div>
 
-    <div class="palette" id="palette"></div>
-    <div class="gif-box" id="gifBox"></div>
+  <div class="watermark">@Crypto__Palette</div>
 
-    <button class="share-btn" id="shareBtn">Share on X</button>
-  </main>
+  <canvas id="shareCanvas" style="display:none"></canvas>
 
-  <div class="watermark">Crypto__Palette</div>
+<script>
+const TENOR_KEY = "AIzaSyDnbLxq-UxWUGmAzPT1sGDAx_LbIxeYvI0";
+const IMGUR_CLIENT_ID = "546c25e4e0f3b88";
 
-  <script>
-    // Example generated colors
-    const colors = ['#FF4757', '#FFA502', '#2ED573', '#1E90FF', '#B98AFF'];
-    const paletteContainer = document.getElementById('palette');
+const $ = s => document.querySelector(s);
 
-    colors.forEach(color => {
-      const div = document.createElement('div');
-      div.classList.add('color-box');
-      div.style.backgroundColor = color;
-      div.textContent = color;
-      paletteContainer.appendChild(div);
-    });
+function hexToRgb(hex){ hex = hex.replace('#',''); if(hex.length===3) hex = hex.split('').map(c=>c+c).join(''); const i=parseInt(hex,16); return {r:(i>>16)&255,g:(i>>8)&255,b:i&255}; }
+function textColorFor(hex){ const {r,g,b} = hexToRgb(hex); const yiq = (r*299+g*587+b*114)/1000; return yiq >= 128 ? '#000' : '#fff'; }
 
-    // Example GIF from Tenor (you can replace the URL dynamically later)
-    const gifBox = document.getElementById('gifBox');
-    const gif = document.createElement('img');
-    gif.src = 'https://media.tenor.com/zCwGkZbFhYIAAAAM/color-palette.gif';
-    gif.alt = 'Palette GIF';
-    gifBox.appendChild(gif);
+async function fetchTenor(query){
+  try{
+    const url = `https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${TENOR_KEY}&limit=20`;
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('Tenor fetch failed '+r.status);
+    const js = await r.json();
+    if(!js.results?.length) return null;
+    const pick = js.results[Math.floor(Math.random()*js.results.length)];
+    const media = pick.media && pick.media[0];
+    return (media && media.gif && media.gif.url) || pick.url || null;
+  }catch(e){console.error(e); return null}
+}
 
-    // Share on X
-    const shareBtn = document.getElementById('shareBtn');
-    shareBtn.addEventListener('click', () => {
-      const text = encodeURIComponent("🎨 Check out my palette + GIF from #Crypto__Palette!");
-      const url = encodeURIComponent("https://adeniniola.github.io/crypto-palette/");
-      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
-    });
-  </script>
+async function buildShareImage({gifUrl, coinName, coinSymbol, price, colors}){
+  const width = 1000, memeHeight = 560, paletteHeight = 140, height = memeHeight + paletteHeight;
+  const canvas = $('#shareCanvas'); canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,0,height); g.addColorStop(0,'#0b0320'); g.addColorStop(1,'#12072a'); ctx.fillStyle = g; ctx.fillRect(0,0,width,height);
+
+  // draw gif if possible
+  let drew=false;
+  if(gifUrl){
+    try{
+      const img = new Image(); img.crossOrigin='anonymous'; img.src = gifUrl;
+      await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; });
+      const pad=28; const w = width - pad*2; const h = memeHeight - pad*2;
+      const sw = img.width, sh = img.height; const scale = Math.min(w/sw,h/sh);
+      const dw = sw*scale, dh = sh*scale;
+      ctx.drawImage(img,(width-dw)/2,pad + ((memeHeight-pad*2)-dh)/2,dw,dh);
+      drew=true;
+    }catch(e){ console.warn('draw gif failed',e); drew=false; }
+  }
+  if(!drew){ ctx.fillStyle='#06030a'; ctx.fillRect(40,40,width-80,memeHeight-80); ctx.fillStyle='#9aa0a6'; ctx.font='18px Inter, Arial'; ctx.textAlign='center'; ctx.fillText('GIF preview unavailable — palette will be shared', width/2, memeHeight/2); }
+
+  // heading
+  ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fillRect(28,28,520,46); ctx.fillStyle='#fff'; ctx.font='700 20px Inter, Arial'; ctx.textAlign='left';
+  const priceStr = price ? ('$'+Number(price).toLocaleString()) : 'n/a';
+  ctx.fillText(`${coinName} — ${coinSymbol.toUpperCase()} — ${priceStr}`, 40, 60);
+
+  // palette strip
+  const pad = 40; const paletteWidth = width - pad*2; const boxW = Math.floor(paletteWidth/colors.length)-8; const boxH = 80;
+  colors.forEach((hex,i)=>{ const x = pad + i*(boxW+8); const y = memeHeight + 18; ctx.fillStyle = hex; ctx.fillRect(x,y,boxW,boxH); ctx.font='600 18px Inter, Arial'; ctx.fillStyle = ( (hexToRgb(hex).r*0.299 + hexToRgb(hex).g*0.587 + hexToRgb(hex).b*0.114) > 186 ? '#000' : '#fff'); ctx.textAlign='center'; ctx.fillText(hex, x+boxW/2, y+boxH+26); });
+
+  // watermark
+  ctx.font='600 14px Inter, Arial'; ctx.fillStyle='rgba(138,92,255,0.9)'; ctx.textAlign='right'; ctx.fillText('@Crypto__Palette', width-28, height-18);
+
+  return new Promise(res=> canvas.toBlob(b=>res({blob:b,drewGif:drew}),'image/png'));
+}
+
+async function uploadToImgur(blob){
+  if(!IMGUR_CLIENT_ID) throw new Error('Imgur client id missing');
+  const f = new FormData(); f.append('image', blob);
+  const r = await fetch('https://api.imgur.com/3/image', { method:'POST', headers:{ Authorization: 'Client-ID ' + IMGUR_CLIENT_ID }, body: f });
+  const js = await r.json();
+  if(js.success && js.data && js.data.link) return js.data.link;
+  throw new Error('Imgur upload failed: ' + JSON.stringify(js));
+}
+
+// read palette from localStorage
+function loadSavedPalette(){
+  const list = JSON.parse(localStorage.getItem('palettes')||'[]');
+  if(list.length) return list[0];
+  // fallback: if index stored selectedCoin, generate quick colors
+  const coinId = localStorage.getItem('selectedCoin') || 'bitcoin';
+  // simple default palette
+  return { coin: coinId, colors: ['#FF8A80','#FFEA8A','#8AFFC6','#9AB8FF','#D7A8FF'] };
+}
+
+async function renderPreview(){
+  const status = $('#status');
+  status.textContent = 'Preparing preview...';
+  const palette = loadSavedPalette();
+  const gifQuery = `${palette.coin} crypto meme`;
+  const gif = await fetchTenor(gifQuery) || await fetchTenor('crypto meme');
+
+  // fill palette UI
+  const paletteHorizontal = $('#paletteHorizontal'); paletteHorizontal.innerHTML='';
+  palette.colors.forEach(hex => {
+    const b = document.createElement('div'); b.className='colorBlock'; b.style.background = hex; b.textContent = ''; paletteHorizontal.appendChild(b);
+  });
+  $('#paletteHexes').textContent = palette.colors.join('  ');
+
+  // show gif
+  const gifBox = $('#gifBox'); gifBox.innerHTML = gif ? `<img src="${gif}" alt="meme gif">` : '<p style="color:var(--muted)">No GIF</p>';
+
+  status.textContent = 'Ready — preview below';
+  // attach share action
+  $('#shareNow').onclick = async ()=>{
+    try{
+      status.textContent = 'Building image...';
+      // fetch coin details for price and name
+      let coinName = palette.coin, coinSymbol = palette.coin;
+      try{
+        const r = await fetch('https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(palette.coin));
+        if(r.ok){ const d = await r.json(); coinName = d.name; coinSymbol = d.symbol; }
+      }catch(e){ /* ignore */ }
+      const built = await buildShareImage({gifUrl: gif, coinName, coinSymbol, price: null, colors: palette.colors});
+      status.textContent = 'Uploading to Imgur...';
+      const imageUrl = await uploadToImgur(built.blob);
+      status.textContent = 'Opening tweet...';
+      const tweetText = `Check this #CryptoPalette for ${coinSymbol.toUpperCase()} 🎨\n${palette.colors.join(' | ')}\n#CryptoPalette @Crypto__Palette`;
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(imageUrl)}`;
+      window.open(tweetUrl, '_blank');
+      status.textContent = 'Done';
+    }catch(err){
+      console.error(err); status.textContent = 'Share failed — see console';
+      alert('Share failed: ' + (err.message || err));
+    }
+  };
+}
+
+async function fetchTenor(q){
+  try{ const url = `https://g.tenor.com/v1/search?q=${encodeURIComponent(q)}&key=${TENOR_KEY}&limit=12`; const r = await fetch(url); if(!r.ok) return null; const js = await r.json(); if(!js.results?.length) return null; const pick = js.results[Math.floor(Math.random()*js.results.length)]; const media = pick.media && pick.media[0]; return (media && media.gif && media.gif.url) || pick.url || null; }catch(e){console.error(e); return null}
+}
+
+renderPreview();
+</script>
 </body>
 </html>
